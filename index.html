@@ -62,10 +62,12 @@
     </div>
   </section>
 
-  <section id="sinopsis" data-fade-section="1" data-screen-label="Sinopsis" style="background:url(assets/paper-bg.jpg) center/cover;padding:56px 20px;transition:opacity .7s ease,transform .7s ease;">
-    <div style="max-width:760px;margin:0 auto;">
-      <h2 style="font-size:32px;text-transform:uppercase;letter-spacing:0.03em;margin:0 0 20px;">Sinopsis</h2>
-      <p style="font-size:18px;line-height:1.6;margin:0;">Un hombre maduro se deja crecer el cabello para donarlo a enfermos de cáncer, aunque la gente que lo rodea lo juzgue por su apariencia.</p>
+  <section id="sinopsis" data-fade-section="1" data-screen-label="Sinopsis" style="background:url(assets/paper-bg.jpg) center/cover;padding:88px 20px 96px;text-align:center;transition:opacity .7s ease,transform .7s ease;">
+    <div style="max-width:960px;margin:0 auto;">
+      <h2 style="font-size:32px;text-transform:uppercase;letter-spacing:0.03em;margin:0 0 28px;">Sinopsis</h2>
+      <div style="width:72px;height:2px;background:#b28987;margin:0 auto 36px;"></div>
+      <p id="sinopsis-texto" aria-label="Un hombre maduro se deja crecer el cabello para donarlo a enfermos de cáncer, aunque la gente que lo rodea lo juzgue por su apariencia." style="font-family:'Fontuna Stencil','Stardos Stencil',cursive;font-size:clamp(28px,5.6vw,52px);line-height:1.25;color:#80605e;margin:0;"><span class="sw" style="display:inline-block;margin-right:.28em;">Un</span><span class="sw" style="display:inline-block;margin-right:.28em;">hombre</span><span class="sw" style="display:inline-block;margin-right:.28em;">maduro</span><span class="sw" style="display:inline-block;margin-right:.28em;">se</span><span class="sw" style="display:inline-block;margin-right:.28em;">deja</span><span class="sw" style="display:inline-block;margin-right:.28em;">crecer</span><span class="sw" style="display:inline-block;margin-right:.28em;">el</span><span class="sw" style="display:inline-block;margin-right:.28em;">cabello</span><span class="sw" style="display:inline-block;margin-right:.28em;">para</span><span class="sw" style="display:inline-block;margin-right:.28em;">donarlo</span><span class="sw" style="display:inline-block;margin-right:.28em;">a</span><span class="sw" style="display:inline-block;margin-right:.28em;">enfermos</span><span class="sw" style="display:inline-block;margin-right:.28em;">de</span><span class="sw" style="display:inline-block;margin-right:.28em;">cáncer,</span><span class="sw" style="display:inline-block;margin-right:.28em;">aunque</span><span class="sw" style="display:inline-block;margin-right:.28em;">la</span><span class="sw" style="display:inline-block;margin-right:.28em;">gente</span><span class="sw" style="display:inline-block;margin-right:.28em;">que</span><span class="sw" style="display:inline-block;margin-right:.28em;">lo</span><span class="sw" style="display:inline-block;margin-right:.28em;">rodea</span><span class="sw" style="display:inline-block;margin-right:.28em;">lo</span><span class="sw" style="display:inline-block;margin-right:.28em;">juzgue</span><span class="sw" style="display:inline-block;margin-right:.28em;">por</span><span class="sw" style="display:inline-block;margin-right:.28em;">su</span><span class="sw" style="display:inline-block;margin-right:.28em;">apariencia.</span></p>
+      <div style="width:72px;height:2px;background:#b28987;margin:36px auto 0;"></div>
     </div>
   </section>
 
@@ -262,6 +264,21 @@ class Component extends DCLogic {
     window.addEventListener('resize', check);
     this._cleanup = () => window.removeEventListener('resize', check);
 
+
+    try {
+      const sp = document.querySelectorAll('#sinopsis-texto .sw');
+      sp.forEach((w, i) => {
+        w.style.opacity = '0'; w.style.transform = 'translateY(14px)';
+        w.style.transition = 'opacity .7s ease ' + (i * 0.09) + 's, transform .7s ease ' + (i * 0.09) + 's';
+      });
+      const go = () => sp.forEach((w) => { w.style.opacity = '1'; w.style.transform = 'translateY(0)'; });
+      const host = document.getElementById('sinopsis');
+      if (host && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((en) => { if (en.some((x) => x.isIntersecting)) { go(); io.disconnect(); } }, { threshold: 0.35 });
+        io.observe(host);
+        setTimeout(go, 6000);
+      } else { go(); }
+    } catch (e) {}
     try {
       const revealEls = document.querySelectorAll('[data-fade-section]');
       revealEls.forEach((el, i) => {
